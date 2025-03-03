@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.escuelaing.arep.model.Property;
 import edu.escuelaing.arep.service.PropertyService;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/v1/property")
 public class PropertyController {
