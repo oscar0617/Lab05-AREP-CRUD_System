@@ -35,13 +35,19 @@ public class PropertyService {
     }
 
     
-    // public Property updateProperty(Property property){
-    //     Optional<Property> propertyToUpdate = propertyRepository.findById(property.getId());
-    //     propertyToUpdate.setAddress(property.getAddress());
-    //     propertyToUpdate.setPrice(property.getPrice());
-    //     propertyToUpdate.setSize(property.getSize());
-    //     propertyToUpdate.setDescription(property.getDescription());
-    //     return propertyRepository.save(propertyToUpdate);
-    // }
+    public Property updateProperty(Property property){
+        Optional<Property> optionalProperty = propertyRepository.findById(property.getId());
+        if (optionalProperty.isPresent()) {
+            Property propertyToUpdate = optionalProperty.get();
+            propertyToUpdate.setAddress(property.getAddress());
+            propertyToUpdate.setPrice(property.getPrice());
+            propertyToUpdate.setSize(property.getSize());
+            propertyToUpdate.setDescription(property.getDescription());
+
+            return propertyRepository.save(propertyToUpdate);
+        }else{
+            return null;
+        }
+    }
     
 }

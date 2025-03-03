@@ -1,3 +1,7 @@
 target/
 .vscode/
 .mvn
+mvnnw
+mvnw.cmd
+Lab05Backend.pem
+Lab5MySQL.pem
