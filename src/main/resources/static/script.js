@@ -1,4 +1,4 @@
-let IPDIRECTION = "localhost";
+let IPADDRESS = "localhost";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadProperties();
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let editingPropertyId = null;
 
 function loadProperties() {
-    fetch(`http://${IPDIRECTION}:8080/v1/property`)
+    fetch(`http://${IPADDRESS}:8080/v1/property`)
         .then(response => response.json())
         .then(properties => {
             const tableBody = document.getElementById("table-body");
@@ -44,7 +44,7 @@ function addProperty() {
     const description = document.getElementById("description").value;
 
     const newProperty = { address, price, size, description };
-    fetch(`http://${IPDIRECTION}:8080/v1/property/create`, {
+    fetch(`http://${IPADDRESS}:8080/v1/property/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newProperty)
@@ -77,7 +77,7 @@ function updateProperty() {
         size: document.getElementById("size").value,
         description: document.getElementById("description").value
     };
-    fetch(`http://${IPDIRECTION}:8080/v1/property/update`, {
+    fetch(`http://${IPADDRESS}:8080/v1/property/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedProperty)
@@ -92,7 +92,7 @@ function updateProperty() {
 }
 
 function deleteProperty(id) {
-    fetch(`http://${IPDIRECTION}:8080/v1/property/${id}`, { method: "DELETE" })
+    fetch(`http://${IPADDRESS}:8080/v1/property/${id}`, { method: "DELETE" })
         .then(() => {
             loadProperties()
             alert("Borrado exitosamente!");

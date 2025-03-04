@@ -1,0 +1,397 @@
+# Property Management System
+ 
+This project implements a simple CRUD (Create, Read, Update, Delete) system for managing real estate properties using a Spring Boot backend and MySQL database and a frontend built with HTML, CSS, and JavaScript. It allows users to create, update, delete, and search for properties.
+
+![Demo](images/demo.gif)
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+You need to install the following tools to run the project:
+1. Java
+    ```
+    java -version
+    ```
+    It should appear something like this:
+    ```
+    java version "17.0.10" 2024-01-16 LTS
+    Java(TM) SE Runtime Environment (build 17.0.10+11-LTS-240)
+    Java HotSpot(TM) 64-Bit Server VM (build 17.0.10+11-LTS-240, mixed mode, sharing)
+    ```
+    ```
+    javac -version
+    ```
+    It should appear something like this:
+    ```
+    javac 17.0.10
+    ```
+2. Maven
+    ```
+    mvn -version
+    ```
+    It should appear something like this:
+    ```
+    Apache Maven 3.9.6 (bc0240f3c744dd6b6ec2920b3cd08dcc295161ae)
+    Maven home: C:\workspace\apache-maven-3.9.6-bin\apache-maven-3.9.6
+    Java version: 17.0.10, vendor: Oracle Corporation, runtime: C:\Program Files\Java\jdk-17
+    Default locale: es_CO, platform encoding: Cp1252
+    OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
+    ```
+3. Git
+    ```
+    git --version
+    ```
+    It should appear something like this:
+    ```
+    git version 2.44.0
+    ```
+
+### Installing locally
+
+1. Clone this repository and go to project directory:
+    ```
+    git clone https://github.com/oscar0617/Lab05-AREP-CRUD_System
+
+    cd Lab05-AREP-CRUD_System
+    ```
+2. Build the project:
+    ```
+    mvn package
+    ```
+    Should appear something like this:
+    ```
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time:  6.194 s
+    [INFO] Finished at: 2025-02-14T20:03:54-05:00
+    [INFO] ------------------------------------------------------------------------
+    ```
+3. Run the project:
+    ```
+    mvn spring-boot:run
+    ```
+    Should appear something like this:
+    ```
+        [INFO] Attaching agents: []
+
+    .   ____          _            __ _ _
+    /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+    ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+    \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+    '  |____| .__|_| |_|_| |_\__, | / / / /
+    =========|_|==============|___/=/_/_/_/
+
+    :: Spring Boot ::                (v3.4.3)
+
+    2025-03-03T19:12:25.713-05:00  INFO 13928 --- [tallerJPA] [           main] e.escuelaing.arep.CrudSystemApplication  : Starting CrudSystemApplication using Java 17.0.10 with PID 13928 (C:\Users\luzma\Desktop\AREP\Lab05-AREP-CRUD_System\target\classes started by luzma in C:\Users\luzma\Desktop\AREP\Lab05-AREP-CRUD_System)
+    ```
+After this, you will be able to access into your browser with http://localhost:8080 and try the CRUD System with a data base locally, to do it with a MySQL data base follow the next section to deploy it on AWS. Check this video of the project working locally:
+
+
+### Installing on AWS
+
+Keep in mind that you will need an active AWS account to run this project on cloud.
+
+#### MySQL Machine
+
+1. Create an EC2 instance on AWS to host MySQL databse using Amazon Linux as the OS.
+
+2. Connect to the EC2 instance:
+
+```
+ssh -i your-key.pem ec2-user@<mysql-ec2-instance-ip>
+```
+
+3. Install MySQL
+```
+wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
+sudo rpm -Uvh mysql80-community-release-el9-1.noarch.rpm
+sudo yum update -y
+sudo yum install -y mysql-community-server
+```
+You should see something like this:
+![MySQL Installation](images/instalacionMySQL.png)
+
+4. Start MySQL
+```
+sudo systemctl enable --now mysqld
+sudo systemctl status mysqld
+```
+5. Get the temporal password of MySQL
+```
+sudo grep 'temporary password' /var/log/mysqld.log
+```
+6. Connect into MySQL using this password
+```
+mysql -u root -p
+```
+![Password example](images/psswd.png)
+7. Create the database and user:
+```
+CREATE DATABASE crudsystem;
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'Password123!';
+GRANT ALL PRIVILEGES ON crudsystem.* TO 'myuser'@'%';
+FLUSH PRIVILEGES;
+```
+8. Allow external connections to MySQL by editing the MySQL config file:
+```
+sudo nano /etc/my.cnf
+```
+9. Add the following line under [mysqld]:
+```
+bind-address = 0.0.0.0
+```
+Follow this example:
+![Connection example](images/connections.png)
+10. Restart MySQL:
+```
+sudo systemctl restart mysqld
+```
+11. Verify the MySQL status
+![Status example](images/statusMySQL.png)
+
+12. Check the listening port
+![Listening example](images/listening.png)
+
+And that's it, we finished setting up our MySQL instance on EC2. Now let's set up the Backend instance.
+
+#### Prerrequisites on the backend for AWS
+
+Before we proceed, we have to make some changes on our settings and code in our backend, to run the application in AWS.
+
+1. In application properties you must add this code:
+```
+spring.datasource.url=jdbc:mysql://<MySQL IPAddress>:3306/crudsystem
+spring.datasource.username=myuser
+spring.datasource.password=<passwordOfTheUser>
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+This code connects into the MySQL Instance to use it as database
+
+2. In `script.js` you need to change this line
+```
+let IPADDRESS = " public ip address of the backend machine";
+```
+
+With this steps you will be able to deploy the backend on AWS
+
+#### Backend on AWS
+
+1. Create another EC2 instance for the backend and connect to it via SSH
+```
+ssh -i your-key.pem ec2-user@<backend-ec2-instance-ip>
+```
+
+2. Install Java and Maven:
+
+```
+sudo yum install java-17-amazon-corretto -y
+sudo yum install maven -y
+```
+
+3. Transfer the JAR file to the EC2 instance using SFTP (keep in mind that you must to compile and package the jar file before this step in you local machine):
+```
+sftp -i your-key.pem ec2-user@<backend-ec2-instance-ip>
+
+put target/arep-0.0.1-SNAPSHOT.jar
+```
+
+4. Run the application using Spring-boot
+```
+java -jar arep-0.0.1-SNAPSHOT.jar
+```
+
+To access to the application don't forget to open the ports on the IAM of AWS, otherwise the connection will be rejected, same for MySQL instance.
+
+
+## Architecture
+
+![Architecture Diagram](images/Architecture.png)
+
+#### Overview
+
+
+## Class Diagram
+![Class Diagram](images/ClassDiagram.png)
+
+#### Overview
+
+The class diagram represents the **Real Estate CRUD System**, showing its main components, relationships, and responsibilities. The system follows a **Model-View-Controller (MVC)** architecture and is divided into three key layers:
+
+1. **`Model`** - Defines the `Property` entity and its attributes.
+2. **`Repository & Service`** - Handles database operations and business logic.
+3. **`Controller`** - Manages HTTP requests and responses.
+
+###### **Model Layer**
+The `Property` class represents a real estate entity with attributes:
+
+- **Attributes**:
+  - `id: Long` → Unique identifier of the property.
+  - `address: String` → Property location.
+  - `price: Integer` → Property price.
+  - `size: String` → Property size.
+  - `description: String` → Additional property details.
+
+- **Methods**:
+  - `getId() : Long` → Returns the property ID.
+  - `getAddress() : String` → Returns the address.
+  - `getPrice() : Integer` → Returns the price.
+  - `getSize() : String` → Returns the size.
+  - `getDescription() : String` → Returns the description.
+  - `setAddress(address: String) : void` → Sets a new address.
+  - `setPrice(price: Integer) : void` → Updates the price.
+  - `setSize(size: String) : void` → Updates the size.
+  - `setDescription(description: String) : void` → Updates the description.
+
+This layer ensures **data encapsulation** and provides access to real estate properties.
+
+###### **Repository Layer**
+The `PropertyRepository` interface extends `JpaRepository` to provide database access.
+
+- **Methods**:
+  - `findById(id: Long) : Optional<Property>` → Retrieves a property by its ID.
+  - `findAll() : List<Property>` → Fetches all properties.
+
+This layer abstracts **data persistence** and allows interaction with the database.
+
+###### **Service Layer**
+The `PropertyService` class implements the business logic for managing properties.
+
+- **Methods**:
+  - `createProperty(property: Property) : Property` → Saves a new property.
+  - `findAllProperties() : List<Property>` → Returns all properties.
+  - `findById(id: Long) : Optional<Property>` → Fetches a property by ID.
+  - `deletePropertyById(id: Long) : void` → Deletes a property.
+  - `updateProperty(property: Property) : Property` → Updates an existing property.
+
+This layer ensures **data validation, processing, and interaction** with the repository.
+
+###### **Controller Layer**
+The `PropertyController` class handles **HTTP requests** and delegates operations to the service layer.
+
+- **Methods**:
+  - `@GetMapping("/{id}")`
+    - **Description**: Fetches a property by ID.
+    - **Returns**: `ResponseEntity<Property>`.
+  
+  - `@PostMapping("/create")`
+    - **Description**: Creates a new property.
+    - **Returns**: `ResponseEntity<Property>` with status `201 CREATED`.
+
+  - `@GetMapping`
+    - **Description**: Retrieves all properties.
+    - **Returns**: `ResponseEntity<List<Property>>`.
+
+  - `@DeleteMapping("/{id}")`
+    - **Description**: Deletes a property by ID.
+    - **Returns**: `ResponseEntity<Void>` with `204 NO CONTENT` or `404 NOT FOUND`.
+
+  - `@PutMapping("/update")`
+    - **Description**: Updates an existing property.
+    - **Returns**: `ResponseEntity<Property>` with `200 OK` or `404 NOT FOUND`.
+
+This layer acts as the **REST API interface**, exposing endpoints for client interactions.
+
+###### **Relationships and Interactions**
+- **Model → Repository**
+  - The `Property` class is mapped to the database using JPA.
+  
+- **Repository → Service**
+  - The `PropertyRepository` is used by `PropertyService` to fetch and manage data.
+  
+- **Service → Controller**
+  - The `PropertyService` handles business logic before sending data to `PropertyController`.
+
+- **Controller → API**
+  - The `PropertyController` exposes RESTful endpoints for external applications to interact with the system.
+
+## Running the tests
+
+The following unit tests were created to validate the functionality of the `PropertyController` class. These tests ensure that each endpoint of the REST API behaves as expected.
+
+#### **1. `testGetPropertyById_WhenPropertyExists`**
+- **Purpose**: Validates that the `/v1/property/{id}` endpoint returns a property when it exists.
+- **What it tests**:
+  - Given an existing property ID, the controller should return a `200 OK` response.
+  - The returned property should match the requested ID and have the correct address.
+
+
+#### **2. `testGetPropertyById_WhenPropertyDoesNotExist`**
+- **Purpose**: Ensures that requesting a non-existent property ID returns `404 NOT FOUND`.
+- **What it tests**:
+  - When a property is not found, the response should have no body and return `404 NOT FOUND`.
+
+
+#### **3. `testCreateProperty`**
+- **Purpose**: Validates the `/v1/property/create` endpoint to ensure that new properties can be created successfully.
+- **What it tests**:
+  - Given a valid property object, the system should return `201 CREATED` and persist the property.
+  - The returned property should match the provided data.
+
+
+#### **4. `testGetAllProperties`**
+- **Purpose**: Ensures that the `/v1/property` endpoint retrieves all stored properties.
+- **What it tests**:
+  - The API should return `200 OK` with a list of properties.
+  - The number of returned properties should match the expected count.
+
+#### **5. `testDeleteProperty_WhenExists`**
+- **Purpose**: Validates that an existing property can be deleted using the `/v1/property/{id}` endpoint.
+- **What it tests**:
+  - Given an existing property ID, the API should return `204 NO CONTENT` after deletion.
+  - The property should no longer exist in the system.
+
+
+#### **6. `testDeleteProperty_WhenNotExists`**
+- **Purpose**: Ensures that trying to delete a non-existent property results in a `404 NOT FOUND` response.
+- **What it tests**:
+  - When a property with the given ID does not exist, the API should return `404 NOT FOUND`.
+
+#### **7. `testUpdateProperty_WhenExists`**
+- **Purpose**: Validates that an existing property can be updated using the `/v1/property/update` endpoint.
+- **What it tests**:
+  - Given a valid property ID and updated data, the API should return `200 OK`.
+  - The updated property should reflect the changes.
+
+#### **8. `testUpdateProperty_WhenNotExists`**
+- **Purpose**: Ensures that trying to update a non-existent property results in a `404 NOT FOUND` response.
+- **What it tests**:
+  - When a property does not exist, the API should return `404 NOT FOUND`.
+  - No changes should be made in the database.
+
+### **Test Execution**
+Each of the tests was executed using **JUnit 5** and **Mockito** to mock dependencies and isolate the `PropertyController`. The expected outcomes were met in all cases, validating the correctness of the CRUD operations.
+
+
+![Test cases](images/test.png)
+
+## Conclusion
+
+The Real Estate CRUD System provides a well-structured and scalable solution for managing property listings. Built with Spring Boot, it follows a layered architecture ensuring separation of concerns between the controller, service, and repository layers.
+
+## Built With
+
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [GIT](https://git-scm.com) - Version control
+* [Spring-boot](https://spring.io/projects/spring-boot) - Backend framework
+* [MySQL](https://www.mysql.com) - Database
+
+## Versioning
+
+I use [GitHub](http://git-scm.com) for versioning.
+
+## Authors
+
+* **Oscar Santiago Lesmes Parra** - [oscar0617](https://github.com/oscar0617)
+
+Date: 03/03/2025
+## License
+
+This project is licensed under the GNU.
