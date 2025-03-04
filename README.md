@@ -91,7 +91,7 @@ You need to install the following tools to run the project:
     ```
 After this, you will be able to access into your browser with http://localhost:8080 and try the CRUD System with a data base locally, to do it with a MySQL data base follow the next section to deploy it on AWS. Check this video of the project working locally:
 
-![Demo](images/demo.gif)
+![Demo](images/demo2.gif)
 
 ### Installing on AWS
 
