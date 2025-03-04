@@ -1,6 +1,6 @@
 # Property Management System
  
-This project implements a simple CRUD (Create, Read, Update, Delete) system for managing real estate properties using a Spring Boot backend and MySQL database and a frontend built with HTML, CSS, and JavaScript. It allows users to create, update, delete, and search for properties.
+This project implements a simple CRUD (Create, Read, Update, Delete) system for managing real estate properties using a Spring Boot backend and MySQL database and a frontend built with HTML, CSS, and JavaScript. It allows users to create, update, delete properties.
 
 ![Demo](images/demo.gif)
 
