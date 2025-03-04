@@ -91,6 +91,7 @@ You need to install the following tools to run the project:
     ```
 After this, you will be able to access into your browser with http://localhost:8080 and try the CRUD System with a data base locally, to do it with a MySQL data base follow the next section to deploy it on AWS. Check this video of the project working locally:
 
+![Demo](images/demo.gif)
 
 ### Installing on AWS
 
@@ -216,6 +217,48 @@ To access to the application don't forget to open the ports on the IAM of AWS, o
 ![Architecture Diagram](images/Architecture.png)
 
 #### Overview
+
+This architecture diagram illustrates the request flow in the **Real Estate CRUD System**. The system is divided into three main components:
+
+1. **Browser (Client)**
+2. **Backend (Spring Boot Application)**
+3. **Database (MySQL)**
+
+### Components and Workflow
+
+#### **1. Browser (Client)**
+The user interacts with the system through a web browser, which:
+- Sends **HTTP requests** to the backend on **port 8080**.
+- Requests **static files** such as:
+  - **HTML** (for page structure).
+  - **JavaScript** (for dynamic interactions).
+  - **CSS** (for styling).
+- Uses JavaScript to send API requests for **CRUD operations** on property listings.
+
+#### **2. Backend (Spring Boot Application)**
+The backend is a **Spring Boot** application that:
+- Processes requests from the browser.
+- Manages property data through the **Property Management Service**.
+- Exposes **RESTful API endpoints** for CRUD operations.
+- Communicates with the **MySQL database** to retrieve and store property information.
+
+#### **3. Database (MySQL)**
+The database is a **MySQL instance** responsible for:
+- Storing property listings.
+- Handling queries related to **creating, reading, updating, and deleting** property records.
+- Sending requested data back to the backend.
+
+### Request Flow
+
+1. The **user** sends an HTTP request from the **browser** (client) to **port 8080**.
+2. If the request is for a **static file** (HTML, CSS, JavaScript), the backend serves the file directly.
+3. If the request is for a **CRUD operation**, the backend processes it through the **Property Management Service**.
+4. The backend queries or updates the **MySQL database** as needed.
+5. The database sends the requested information back to the backend.
+6. The backend responds to the browser with the processed data.
+7. The browser dynamically updates the UI to reflect the changes.
+
+This architecture ensures a structured, efficient, and **scalable** real estate management system.
 
 
 ## Class Diagram
