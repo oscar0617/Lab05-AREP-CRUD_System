@@ -225,6 +225,9 @@ java -jar arep-0.0.1-SNAPSHOT.jar
 
 To access to the application don't forget to open the ports on the IAM of AWS, otherwise the connection will be rejected, same for MySQL instance.
 
+Let's see the application running in AWS:
+
+![AWS](images/demo3.gif)
 
 ## Architecture
 
