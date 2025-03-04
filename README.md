@@ -156,7 +156,7 @@ FLUSH PRIVILEGES;
 ```
 sudo nano /etc/my.cnf
 ```
-9. Add the following line under [mysqld]:
+9. Add the following line at the bottom of the file:
 ```
 bind-address = 0.0.0.0
 ```
