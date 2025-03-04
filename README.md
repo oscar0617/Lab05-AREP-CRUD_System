@@ -48,6 +48,14 @@ You need to install the following tools to run the project:
     ```
     git version 2.44.0
     ```
+4. Docker
+    ```
+    docker --version
+    ```
+    It should appear something like this:
+    ```
+    Docker version 27.3.1, build ce12230
+    ```
 
 ### Installing locally
 
@@ -70,7 +78,11 @@ You need to install the following tools to run the project:
     [INFO] Finished at: 2025-02-14T20:03:54-05:00
     [INFO] ------------------------------------------------------------------------
     ```
-3. Run the project:
+3. Run the container with MySQL
+    ```
+    docker-compose up -d
+    ```
+4. Run the project:
     ```
     mvn spring-boot:run
     ```
@@ -92,6 +104,8 @@ You need to install the following tools to run the project:
 After this, you will be able to access into your browser with http://localhost:8080 and try the CRUD System with a data base locally, to do it with a MySQL data base follow the next section to deploy it on AWS. Check this video of the project working locally:
 
 ![Demo](images/demo2.gif)
+
+![Demo DataBase](images/DBeaver%20test.png)
 
 ### Installing on AWS
 
@@ -260,7 +274,6 @@ The database is a **MySQL instance** responsible for:
 
 This architecture ensures a structured, efficient, and **scalable** real estate management system.
 
-
 ## Class Diagram
 ![Class Diagram](images/ClassDiagram.png)
 
@@ -425,10 +438,11 @@ The Real Estate CRUD System provides a well-structured and scalable solution for
 * [GIT](https://git-scm.com) - Version control
 * [Spring-boot](https://spring.io/projects/spring-boot) - Backend framework
 * [MySQL](https://www.mysql.com) - Database
+* [Docker](https://www.docker.com) - Virtualization
 
 ## Versioning
 
-I use [GitHub](http://git-scm.com) for versioning.
+I use [GitHub](http://github.com) for versioning.
 
 ## Authors
 
